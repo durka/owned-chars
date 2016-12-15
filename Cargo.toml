@@ -1,6 +1,6 @@
 [package]
 name = "owned_chars"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Alex Burka <rust@alexburka.com>"]
 
 description = "Owned iterators with the same output as Chars and CharIndices"
