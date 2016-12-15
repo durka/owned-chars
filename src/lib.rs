@@ -73,6 +73,13 @@ fn chars() {
 }
 
 #[test]
+fn unicode() {
+    let s = String::from("héllo");
+    assert_eq!(Some('é'), s.clone().into_chars().skip(1).next());
+    assert_eq!(Some('l'), s.clone().into_chars().skip(2).next());
+}
+
+#[test]
 fn char_indices() {
     let s = String::from("héllo");
     assert_eq!(s.char_indices().collect::<Vec<_>>(),
