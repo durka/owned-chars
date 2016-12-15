@@ -36,6 +36,24 @@ pub struct OwnedCharIndices {
     i: usize,
 }
 
+macro_rules! impls {
+    ($s:ident) => {
+        impl $s {
+            /// Consume this struct and return the contained String
+            pub fn into_inner(self) -> String {
+                self.s
+            }
+
+            /// Borrow the contained String
+            pub fn as_str(&self) -> &str {
+                &self.s
+            }
+        }
+    }
+}
+impls!(OwnedChars);
+impls!(OwnedCharIndices);
+
 impl Iterator for OwnedChars {
     type Item = char;
     
@@ -84,5 +102,16 @@ fn char_indices() {
     let s = String::from("héllo");
     assert_eq!(s.char_indices().collect::<Vec<_>>(),
                s.into_char_indices().collect::<Vec<_>>());
+}
+
+#[test]
+fn methods() {
+    let s = String::from("héllo");
+    let oc = s.clone().into_chars();
+    let oci = s.clone().into_char_indices();
+    assert_eq!(&s, oc.as_str());
+    assert_eq!(&s, oci.as_str());
+    assert_eq!(s, oc.into_inner());
+    assert_eq!(s, oci.into_inner());
 }
 
