@@ -58,7 +58,7 @@ impl Iterator for OwnedChars {
     type Item = char;
     
     fn next(&mut self) -> Option<char> {
-        match self.s[self.i..].chars().next() {
+        match unsafe { self.s.slice_unchecked(self.i, self.s.len()).chars().next() } {
             Some(c) => {
                 self.i += c.len_utf8();
                 Some(c)
@@ -72,7 +72,7 @@ impl Iterator for OwnedCharIndices {
     type Item = (usize, char);
     
     fn next(&mut self) -> Option<(usize, char)> {
-        match self.s[self.i..].chars().next() {
+        match unsafe { self.s.slice_unchecked(self.i, self.s.len()).chars().next() } {
             Some(c) => {
                 let ret = Some((self.i, c));
                 self.i += c.len_utf8();
