@@ -1,9 +1,10 @@
 [package]
 name = "owned_chars"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Alex Burka <rust@alexburka.com>"]
 
 description = "Owned iterators with the same output as Chars and CharIndices"
+categories = ["memory-management", "text-processing"]
 homepage = "https://github.com/durka/owned-chars"
 repository = "https://github.com/durka/owned-chars"
 license = "MIT/Apache-2.0"
