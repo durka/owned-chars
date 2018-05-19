@@ -4,6 +4,13 @@
 //! the same output as Chars and CharIndices, but creating the iterator consumes the String as
 //! opposed to borrowing.
 
+#[macro_use]
+extern crate delegate;
+
+use std::str::{Chars, CharIndices};
+use std::iter::{Iterator, DoubleEndedIterator, FusedIterator};
+use std::mem::{transmute, uninitialized};
+
 /// Extension trait for String providing owned char and char-index iterators
 pub trait OwnedCharsExt {
     /// Gets an owning iterator over the chars (see `chars()`)
@@ -14,74 +21,90 @@ pub trait OwnedCharsExt {
 
 impl OwnedCharsExt for String {
     fn into_chars(self) -> OwnedChars {
-        OwnedChars { s: self, i: 0 }
+        OwnedChars::from_string(self)
     }
 
     fn into_char_indices(self) -> OwnedCharIndices {
-        OwnedCharIndices { s: self, i: 0 }
+        OwnedCharIndices::from_string(self)
     }
 }
 
 /// Iterator over the chars of a string (the string is owned by the iterator)
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct OwnedChars {
     s: String,
-    i: usize,
+    i: Chars<'static>,
 }
 
 /// Iterator over the chars of a string and their indices (the string is owned by the iterator)
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct OwnedCharIndices {
     s: String,
-    i: usize,
+    i: CharIndices<'static>,
 }
 
 macro_rules! impls {
-    ($s:ident) => {
-        impl $s {
+    ($owned_struct:ident, $target_struct:ident, $method: ident, $item: ty) => {
+        impl $owned_struct {
+            /// Create Self from a String, moving the String into Self
+            fn from_string(s: String) -> Self {
+                unsafe {
+                    // First, move the string
+                    let mut owned = $owned_struct {
+                        s: s,
+                        i: uninitialized()
+                    };
+
+                    // Then, we can call .chars, which with have the same
+                    // lifetime of the owner. We need the transmute to "widen"
+                    // the lifetime into 'static which would allow us to store
+                    // it in the owner.
+                    owned.i = transmute::<$target_struct, $target_struct<'static>>(owned.s.$method());
+
+                    owned
+                }
+            }
+
             /// Consume this struct and return the contained String
             pub fn into_inner(self) -> String {
                 self.s
             }
 
-            /// Borrow the contained String
-            pub fn as_str(&self) -> &str {
-                &self.s
+            delegate! {
+                target self.i {
+                    /// Borrow the contained String
+                    pub fn as_str(&self) -> &str;
+                }
             }
         }
-    }
-}
-impls!(OwnedChars);
-impls!(OwnedCharIndices);
 
-impl Iterator for OwnedChars {
-    type Item = char;
-    
-    fn next(&mut self) -> Option<char> {
-        match unsafe { self.s.slice_unchecked(self.i, self.s.len()).chars().next() } {
-            Some(c) => {
-                self.i += c.len_utf8();
-                Some(c)
-            },
-            None => None
+        impl Iterator for $owned_struct {
+            type Item = $item;
+
+            delegate! {
+                target self.i {
+                    fn next(&mut self) -> Option<$item>;
+                    fn count(self) -> usize;
+                    fn size_hint(&self) -> (usize, Option<usize>);
+                    fn last(self) -> Option<$item>;
+                }
+            }
         }
-    }
+
+        impl DoubleEndedIterator for $owned_struct {
+            delegate! {
+                target self.i {
+                    fn next_back(&mut self) -> Option<$item>;
+                }
+            }
+        }
+
+        impl FusedIterator for $owned_struct {}
+    };
 }
 
-impl Iterator for OwnedCharIndices {
-    type Item = (usize, char);
-    
-    fn next(&mut self) -> Option<(usize, char)> {
-        match unsafe { self.s.slice_unchecked(self.i, self.s.len()).chars().next() } {
-            Some(c) => {
-                let ret = Some((self.i, c));
-                self.i += c.len_utf8();
-                ret
-            },
-            None => None
-        }
-    }
-}
+impls!(OwnedChars, Chars, chars, char);
+impls!(OwnedCharIndices, CharIndices, char_indices, (usize, char));
 
 #[test]
 fn chars() {
