@@ -1,4 +1,4 @@
-# guard
+# owned-chars
 
 [![Travis CI](https://travis-ci.org/durka/owned-chars.svg)](https://travis-ci.org/durka/owned-chars)
 
