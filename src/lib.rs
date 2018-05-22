@@ -3,6 +3,9 @@
 //! This crate provides two owned iterators over String: OwnedChars and OwnedCharIndices. They have
 //! the same output as Chars and CharIndices, but creating the iterator consumes the String as
 //! opposed to borrowing.
+//! 
+//! Do you think this should be included in Rust proper? [Comment
+//! here](https://github.com/durka/owned-chars/issues/5) if so!
 
 #[macro_use]
 extern crate delegate;
