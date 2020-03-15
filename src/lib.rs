@@ -32,7 +32,7 @@ impl OwnedCharsExt for String {
 mod structs {
     use std::str::{Chars, CharIndices};
     use std::iter::{Iterator, DoubleEndedIterator, FusedIterator};
-    use std::mem::{uninitialized, transmute};
+    use std::mem::transmute;
 
     /// Iterator over the chars of a string (the string is owned by the iterator)
     #[derive(Debug)]
@@ -54,19 +54,17 @@ mod structs {
                 /// Create Self from a String, moving the String into Self
                 pub fn from_string(s: String) -> Self {
                     unsafe {
-                        // First, move the string
-                        let mut owned = $owned_struct {
-                            s: s,
-                            i: uninitialized()
-                        };
+                        // First, we can call .chars/.char_indices, whose result will have the same
+                        // lifetime as the owner. We need the transmute to "widen" the lifetime into
+                        // 'static which allows us to store it in the struct.
+                        //
+                        // The struct fields are private, so users can't observe this fake static
+                        // lifetime. Code within this module must never destructure the struct
+                        // because it risks losing track of the real lifetime!
+                        let i = transmute::<$target_struct, $target_struct<'static>>(s.$method());
 
-                        // Then, we can call .chars, which with have the same
-                        // lifetime of the owner. We need the transmute to "widen"
-                        // the lifetime into 'static which would allow us to store
-                        // it in the owner.
-                        owned.i = transmute::<$target_struct, $target_struct<'static>>(owned.s.$method());
-
-                        owned
+                        // Now, move the string (but not the string data!)
+                        $owned_struct { s, i }
                     }
                 }
 
