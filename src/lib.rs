@@ -74,7 +74,7 @@ mod structs {
                 }
 
                 delegate! {
-                    target self.i {
+                    to self.i {
                         /// Borrow the contained String
                         pub fn as_str(&self) -> &str;
                     }
@@ -85,7 +85,7 @@ mod structs {
                 type Item = $item;
 
                 delegate! {
-                    target self.i {
+                    to self.i {
                         fn next(&mut self) -> Option<$item>;
                         fn count(self) -> usize;
                         fn size_hint(&self) -> (usize, Option<usize>);
@@ -96,7 +96,7 @@ mod structs {
 
             impl DoubleEndedIterator for $owned_struct {
                 delegate! {
-                    target self.i {
+                    to self.i {
                         fn next_back(&mut self) -> Option<$item>;
                     }
                 }
