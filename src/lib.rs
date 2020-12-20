@@ -8,7 +8,7 @@
 //! here](https://github.com/durka/owned-chars/issues/5) if so!
 
 #[macro_use]
-extern crate delegate;
+extern crate delegate_attr;
 
 /// Extension trait for String providing owned char and char-index iterators
 pub trait OwnedCharsExt {
@@ -73,33 +73,24 @@ mod structs {
                     self.s
                 }
 
-                delegate! {
-                    to self.i {
-                        /// Borrow the contained String
-                        pub fn as_str(&self) -> &str;
-                    }
-                }
+                #[delegate(self.i)]
+                /// Borrow the contained String
+                pub fn as_str(&self) -> &str;
             }
 
+            #[delegate(self.i)]
             impl Iterator for $owned_struct {
                 type Item = $item;
 
-                delegate! {
-                    to self.i {
-                        fn next(&mut self) -> Option<$item>;
-                        fn count(self) -> usize;
-                        fn size_hint(&self) -> (usize, Option<usize>);
-                        fn last(self) -> Option<$item>;
-                    }
-                }
+                fn next(&mut self) -> Option<$item>;
+                fn count(self) -> usize;
+                fn size_hint(&self) -> (usize, Option<usize>);
+                fn last(self) -> Option<$item>;
             }
 
+            #[delegate(self.i)]
             impl DoubleEndedIterator for $owned_struct {
-                delegate! {
-                    to self.i {
-                        fn next_back(&mut self) -> Option<$item>;
-                    }
-                }
+                fn next_back(&mut self) -> Option<$item>;
             }
 
             impl FusedIterator for $owned_struct {}

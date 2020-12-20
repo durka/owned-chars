@@ -11,4 +11,4 @@ license = "MIT/Apache-2.0"
 keywords = ["chars", "string", "owned", "iterator"]
 
 [dependencies]
-delegate = "0.4"
+delegate-attr = "0.2.6"
