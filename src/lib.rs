@@ -41,14 +41,14 @@ mod structs {
     use std::mem::transmute;
     use std::str::{CharIndices, Chars};
 
-    /// Iterator over the chars of a string (the string is owned by the iterator).
+    /// An iterator over the [`char`]s of an owned `String`.
     #[derive(Debug)]
     pub struct OwnedChars {
         s: String,
         i: Chars<'static>,
     }
 
-    /// Iterator over the chars of a string and their indices (the string is owned by the iterator).
+    /// An iterator over the [`char`]s of an owned `String`, and their positions.
     #[derive(Debug)]
     pub struct OwnedCharIndices {
         s: String,
