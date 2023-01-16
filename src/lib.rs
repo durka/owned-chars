@@ -15,9 +15,14 @@ extern crate delegate_attr;
 
 /// Extension trait for String providing owned char and char-index iterators
 pub trait OwnedCharsExt {
-    /// Gets an owning iterator over the chars (see `chars()`)
+    /// Returns an owning iterator over the [`char`]s of a string.
+    ///
+    /// It is an owning alternative to [`str::chars`] method.
     fn into_chars(self) -> OwnedChars;
-    /// Gets an owning iterator over the chars and their indices (see `char_indices()`)
+
+    /// Returns an owning iterator over the [`char`]s of a string, and their positions.
+    ///
+    /// It is an owning alternative to [`str::char_indices`] method.
     fn into_char_indices(self) -> OwnedCharIndices;
 }
 
