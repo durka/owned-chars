@@ -74,7 +74,20 @@ mod structs {
                 }
 
                 #[delegate(self.i)]
-                /// Borrow the contained String
+                /// Views the underlying data as a subslice of the original data.
+                /// 
+                /// # Example
+                ///
+                /// ```rust
+                /// # use owned_chars::{OwnedChars, OwnedCharsExt};
+                /// let mut chars: OwnedChars = String::from("abc").into_chars();
+                /// assert_eq!(chars.as_str(), "abc");
+                /// chars.next();
+                /// assert_eq!(chars.as_str(), "bc");
+                /// chars.next();
+                /// chars.next();
+                /// assert_eq!(chars.as_str(), "");
+                /// ```
                 pub fn as_str(&self) -> &str;
             }
 
