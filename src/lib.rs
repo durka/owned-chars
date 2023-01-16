@@ -72,7 +72,7 @@ mod structs {
                     }
                 }
 
-                /// Consume this struct and return the contained String.
+                /// Consumes the iterator, returning the contained `String`.
                 pub fn into_inner(self) -> String {
                     self.s
                 }
