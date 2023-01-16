@@ -10,7 +10,7 @@
 //! [Chars]: std::str::Chars
 //! [CharIndices]: std::str::CharIndices
 
-/// Extension trait for String providing owned char and char-index iterators
+/// Extension trait for String providing owned char and char-index iterators.
 pub trait OwnedCharsExt {
     /// Returns an owning iterator over the [`char`]s of a string.
     ///
@@ -39,14 +39,14 @@ mod structs {
     use std::iter::{Iterator, DoubleEndedIterator, FusedIterator};
     use std::mem::transmute;
 
-    /// Iterator over the chars of a string (the string is owned by the iterator)
+    /// Iterator over the chars of a string (the string is owned by the iterator).
     #[derive(Debug)]
     pub struct OwnedChars {
         s: String,
         i: Chars<'static>,
     }
 
-    /// Iterator over the chars of a string and their indices (the string is owned by the iterator)
+    /// Iterator over the chars of a string and their indices (the string is owned by the iterator).
     #[derive(Debug)]
     pub struct OwnedCharIndices {
         s: String,
@@ -77,7 +77,7 @@ mod structs {
                     }
                 }
 
-                /// Consume this struct and return the contained String
+                /// Consume this struct and return the contained String.
                 pub fn into_inner(self) -> String {
                     self.s
                 }
