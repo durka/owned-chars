@@ -73,6 +73,24 @@ mod structs {
                     self.s
                 }
 
+                /// Returns a string slice of contained `String`.
+                ///
+                /// # Example
+                ///
+                /// ```rust
+                /// # use owned_chars::{OwnedChars, OwnedCharsExt};
+                /// let mut chars: OwnedChars = String::from("abc").into_chars();
+                /// assert_eq!(chars.get_inner(), "abc");
+                /// chars.next();
+                /// assert_eq!(chars.get_inner(), "abc");
+                /// chars.next();
+                /// chars.next();
+                /// assert_eq!(chars.get_inner(), "abc");
+                /// ```
+                pub fn get_inner(&self) -> &str {
+                    &self.s
+                }
+
                 #[delegate(self.i)]
                 /// Borrow the contained String
                 pub fn as_str(&self) -> &str;
