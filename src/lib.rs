@@ -33,7 +33,6 @@ impl OwnedCharsExt for String {
     }
 }
 
-/// structs
 mod structs {
     use std::str::{Chars, CharIndices};
     use std::iter::{Iterator, DoubleEndedIterator, FusedIterator};
