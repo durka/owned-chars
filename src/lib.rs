@@ -127,35 +127,39 @@ mod structs {
 
 pub use structs::*;
 
-#[test]
-fn chars() {
-    let s = String::from("héllo");
-    assert_eq!(s.chars().collect::<Vec<_>>(),
-               s.into_chars().collect::<Vec<_>>());
-}
+#[cfg(test)]
+mod tests {
+    use crate::OwnedCharsExt;
 
-#[test]
-fn unicode() {
-    let s = String::from("héllo");
-    assert_eq!(Some('é'), s.clone().into_chars().skip(1).next());
-    assert_eq!(Some('l'), s.clone().into_chars().skip(2).next());
-}
+    #[test]
+    fn chars() {
+        let s = String::from("héllo");
+        assert_eq!(s.chars().collect::<Vec<_>>(),
+                s.into_chars().collect::<Vec<_>>());
+    }
 
-#[test]
-fn char_indices() {
-    let s = String::from("héllo");
-    assert_eq!(s.char_indices().collect::<Vec<_>>(),
-               s.into_char_indices().collect::<Vec<_>>());
-}
+    #[test]
+    fn unicode() {
+        let s = String::from("héllo");
+        assert_eq!(Some('é'), s.clone().into_chars().skip(1).next());
+        assert_eq!(Some('l'), s.clone().into_chars().skip(2).next());
+    }
 
-#[test]
-fn methods() {
-    let s = String::from("héllo");
-    let oc = s.clone().into_chars();
-    let oci = s.clone().into_char_indices();
-    assert_eq!(&s, oc.as_str());
-    assert_eq!(&s, oci.as_str());
-    assert_eq!(s, oc.into_inner());
-    assert_eq!(s, oci.into_inner());
-}
+    #[test]
+    fn char_indices() {
+        let s = String::from("héllo");
+        assert_eq!(s.char_indices().collect::<Vec<_>>(),
+                s.into_char_indices().collect::<Vec<_>>());
+    }
 
+    #[test]
+    fn methods() {
+        let s = String::from("héllo");
+        let oc = s.clone().into_chars();
+        let oci = s.clone().into_char_indices();
+        assert_eq!(&s, oc.as_str());
+        assert_eq!(&s, oci.as_str());
+        assert_eq!(s, oc.into_inner());
+        assert_eq!(s, oci.into_inner());
+    }
+}
