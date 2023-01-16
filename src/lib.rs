@@ -3,10 +3,10 @@
 //! This crate provides two owned iterators over String: [OwnedChars] and [OwnedCharIndices]. They have
 //! the same output as [Chars] and [CharIndices], respectively, but creating the iterator consumes the String as
 //! opposed to borrowing.
-//! 
+//!
 //! Do you think this should be included in Rust proper? [Comment
 //! here](https://github.com/durka/owned-chars/issues/5) if so!
-//! 
+//!
 //! [Chars]: std::str::Chars
 //! [CharIndices]: std::str::CharIndices
 
@@ -37,9 +37,9 @@ impl OwnedCharsExt for String {
 }
 
 mod structs {
-    use std::str::{Chars, CharIndices};
-    use std::iter::{Iterator, DoubleEndedIterator, FusedIterator};
+    use std::iter::{DoubleEndedIterator, FusedIterator, Iterator};
     use std::mem::transmute;
+    use std::str::{CharIndices, Chars};
 
     /// Iterator over the chars of a string (the string is owned by the iterator).
     #[derive(Debug)]
@@ -58,11 +58,7 @@ mod structs {
     macro_rules! impls {
         ($owned_struct:ident, $target_struct:ident, $method: ident, $item: ty) => {
             impl $owned_struct {
-                #[doc = concat!(
-                    "Creates new `",
-                    stringify!($owned_struct),
-                    "` from the String.",
-                )]
+                #[doc = concat!("Creates new `", stringify!($owned_struct), "` from the String.")]
                 pub fn from_string(s: String) -> Self {
                     unsafe {
                         // First, we can call .chars/.char_indices, whose result will have the same
@@ -86,7 +82,7 @@ mod structs {
 
                 #[delegate(self.i)]
                 /// Views the underlying data as a subslice of the original data.
-                /// 
+                ///
                 /// # Example
                 ///
                 /// ```rust
@@ -134,8 +130,10 @@ mod tests {
     #[test]
     fn chars() {
         let s = String::from("héllo");
-        assert_eq!(s.chars().collect::<Vec<_>>(),
-                s.into_chars().collect::<Vec<_>>());
+        assert_eq!(
+            s.chars().collect::<Vec<_>>(),
+            s.into_chars().collect::<Vec<_>>()
+        );
     }
 
     #[test]
@@ -148,8 +146,10 @@ mod tests {
     #[test]
     fn char_indices() {
         let s = String::from("héllo");
-        assert_eq!(s.char_indices().collect::<Vec<_>>(),
-                s.into_char_indices().collect::<Vec<_>>());
+        assert_eq!(
+            s.char_indices().collect::<Vec<_>>(),
+            s.into_char_indices().collect::<Vec<_>>()
+        );
     }
 
     #[test]
