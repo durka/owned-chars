@@ -48,7 +48,11 @@ mod structs {
     macro_rules! impls {
         ($owned_struct:ident, $target_struct:ident, $method: ident, $item: ty) => {
             impl $owned_struct {
-                /// Create Self from a String, moving the String into Self
+                #[doc = concat!(
+                    "Creates new `",
+                    stringify!($owned_struct),
+                    "` from the String.",
+                )]
                 pub fn from_string(s: String) -> Self {
                     unsafe {
                         // First, we can call .chars/.char_indices, whose result will have the same
