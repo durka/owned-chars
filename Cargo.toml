@@ -9,6 +9,3 @@ homepage = "https://github.com/durka/owned-chars"
 repository = "https://github.com/durka/owned-chars"
 license = "MIT/Apache-2.0"
 keywords = ["chars", "string", "owned", "iterator"]
-
-[dependencies]
-delegate-attr = "0.2.6"
