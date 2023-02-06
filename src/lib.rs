@@ -7,9 +7,6 @@
 //! Do you think this should be included in Rust proper? [Comment
 //! here](https://github.com/durka/owned-chars/issues/5) if so!
 
-#[macro_use]
-extern crate delegate_attr;
-
 /// Extension trait for String providing owned char and char-index iterators
 pub trait OwnedCharsExt {
     /// Gets an owning iterator over the chars (see `chars()`)
@@ -91,24 +88,33 @@ mod structs {
                     &self.s
                 }
 
-                #[delegate(self.i)]
                 /// Borrow the contained String
-                pub fn as_str(&self) -> &str;
+                pub fn as_str(&self) -> &str {
+                    self.i.as_str()
+                }
             }
 
-            #[delegate(self.i)]
             impl Iterator for $owned_struct {
                 type Item = $item;
 
-                fn next(&mut self) -> Option<$item>;
-                fn count(self) -> usize;
-                fn size_hint(&self) -> (usize, Option<usize>);
-                fn last(self) -> Option<$item>;
+                fn next(&mut self) -> Option<$item> {
+                    self.i.next()
+                }
+                fn count(self) -> usize {
+                    self.i.count()
+                }
+                fn size_hint(&self) -> (usize, Option<usize>) {
+                    self.i.size_hint()
+                }
+                fn last(self) -> Option<$item> {
+                    self.i.last()
+                }
             }
 
-            #[delegate(self.i)]
             impl DoubleEndedIterator for $owned_struct {
-                fn next_back(&mut self) -> Option<$item>;
+                fn next_back(&mut self) -> Option<$item> {
+                    self.i.next_back()
+                }
             }
 
             impl FusedIterator for $owned_struct {}
